@@ -1531,6 +1531,20 @@ export class SelectQueryBuilder<Entity>
     }
 
     /**
+     * Gets first raw result returned by execution of generated query builder sql or rejects the returned promise on error.
+     */
+    async getRawOneOrFail<T = any>(): Promise<T> {
+        const result = await this.getRawOne<T>()
+        if (!result) {
+            throw new EntityNotFoundError(
+                this.expressionMap.mainAlias!.target,
+                this,
+            )
+        }
+        return result
+    }
+
+    /**
      * Gets all raw results returned by execution of generated query builder sql.
      */
     async getRawMany<T = any>(): Promise<T[]> {
